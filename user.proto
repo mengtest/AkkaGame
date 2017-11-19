@@ -1,0 +1,14 @@
+syntax = "proto2";
+
+package model;
+
+option java_package = "model";
+option java_outer_classname = "UserProtos";
+
+message User {
+  required string id = 1;
+  optional string username = 2;
+  optional string password = 3;
+
+  optional string gameId = 4;
+}

@@ -1,0 +1,14 @@
+syntax = "proto2";
+
+package model;
+
+option java_package = "model";
+option java_outer_classname = "GameProtos";
+
+message Game {
+  required string id = 1;
+  optional int32 minSize = 2;
+  optional int32 maxSize = 3;
+  repeated string userIds = 4;
+
+}

@@ -1,0 +1,24 @@
+syntax = "proto2";
+
+package model;
+
+import "game.proto";
+
+option java_package = "model";
+option java_outer_classname = "GameApiProtos";
+
+message CreateGameResponse {
+  optional Game game = 1;
+  optional string host = 2;
+  optional int32 port = 3;
+}
+
+message JoinGameResponse {
+}
+
+message LeaveGameResponse {
+}
+
+message GetGameResponse {
+	optional Game game = 1;
+}

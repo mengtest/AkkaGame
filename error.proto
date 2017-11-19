@@ -1,0 +1,11 @@
+syntax = "proto2";
+
+package model;
+
+option java_package = "model";
+option java_outer_classname = "ErrorProtos";
+
+message ErrorResponse {
+  optional int32 code = 1;
+  optional string message = 2;
+}
