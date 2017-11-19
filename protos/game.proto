@@ -10,5 +10,4 @@ message Game {
   optional int32 minSize = 2;
   optional int32 maxSize = 3;
   repeated string userIds = 4;
-
 }
