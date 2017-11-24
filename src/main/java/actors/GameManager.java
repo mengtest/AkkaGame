@@ -124,16 +124,10 @@ public class GameManager extends AbstractActor {
 	static public class GetGame {
 	}
 
-	static public class GetGameFailed {
-
-		private final Throwable cause;
+	static public class GetGameFailed extends MessageFailed {
 
 		public GetGameFailed(Throwable cause) {
-			this.cause = cause;
-		}
-
-		public Throwable getCause() {
-			return cause;
+			super(cause);
 		}
 	}
 
@@ -159,16 +153,10 @@ public class GameManager extends AbstractActor {
 		}
 	}
 
-	static public class JoinGameFailed {
-
-		private final Throwable cause;
+	static public class JoinGameFailed extends MessageFailed {
 
 		public JoinGameFailed(Throwable cause) {
-			this.cause = cause;
-		}
-
-		public Throwable getCause() {
-			return cause;
+			super(cause);
 		}
 	}
 
@@ -186,16 +174,10 @@ public class GameManager extends AbstractActor {
 		}
 	}
 
-	static public class RemoveUserFromGameFailed {
-
-		private final Throwable cause;
+	static public class RemoveUserFromGameFailed extends MessageFailed {
 
 		public RemoveUserFromGameFailed(Throwable cause) {
-			this.cause = cause;
-		}
-
-		public Throwable getCause() {
-			return cause;
+			super(cause);
 		}
 	}
 

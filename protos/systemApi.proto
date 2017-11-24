@@ -1,0 +1,12 @@
+syntax = "proto2";
+
+package model;
+
+import "systemInfo.proto";
+
+option java_package = "model";
+option java_outer_classname = "SystemApiProtos";
+
+message GetSystemInfosResponse {
+  repeated SystemInfo systemInfos = 1;
+}

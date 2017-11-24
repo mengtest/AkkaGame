@@ -19,11 +19,12 @@ import model.GameApiProtos.GetGameResponse;
 import model.GameApiProtos.JoinGameResponse;
 import model.GameApiProtos.LeaveGameResponse;
 import model.GameProtos.Game;
+import utils.ConfigValues;
 import utils.ConversionUtils;
 import utils.ErrorUtils;
 import utils.UserManagerStore;
 
-public class HttpGame extends HttpInterface {
+public class HttpGame extends HttpInterface implements ConfigValues {
 	
 	private final ActorRef gameManager;
 	private final UserManagerStore userManagerStore;

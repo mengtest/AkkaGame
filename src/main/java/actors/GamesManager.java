@@ -58,16 +58,10 @@ public class GamesManager extends AbstractActor {
 		}
 	}
 
-	static public class CreateGameFailed {
-
-		private final Throwable cause;
+	static public class CreateGameFailed extends MessageFailed {
 
 		public CreateGameFailed(Throwable cause) {
-			this.cause = cause;
-		}
-
-		public Throwable getCause() {
-			return cause;
+			super(cause);
 		}
 	}
 

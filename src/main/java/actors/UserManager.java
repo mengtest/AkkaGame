@@ -113,16 +113,10 @@ public class UserManager extends AbstractActor {
 	static public class GetUser {
 	}
 
-	static public class GetUserFailed {
-
-		private final Throwable cause;
+	static public class GetUserFailed extends MessageFailed {
 
 		public GetUserFailed(Throwable cause) {
-			this.cause = cause;
-		}
-
-		public Throwable getCause() {
-			return cause;
+			super(cause);
 		}
 	}
 
@@ -151,18 +145,13 @@ public class UserManager extends AbstractActor {
 		}
 	}
 
-	static public class AddToGameFailed {
+	static public class AddToGameFailed extends MessageFailed {
 
 		private final ActorRef http;
-		private final Throwable cause;
-
+		
 		public AddToGameFailed(ActorRef http, Throwable cause) {
+			super(cause);
 			this.http = http;
-			this.cause = cause;
-		}
-
-		public Throwable getCause() {
-			return cause;
 		}
 
 		public ActorRef getHttp() {
@@ -207,18 +196,13 @@ public class UserManager extends AbstractActor {
 		}
 	}
 
-	static public class RemoveFromGameFailed {
+	static public class RemoveFromGameFailed extends MessageFailed {
 
 		private final ActorRef http;
-		private final Throwable cause;
 
 		public RemoveFromGameFailed(ActorRef http, Throwable cause) {
+			super(cause);
 			this.http = http;
-			this.cause = cause;
-		}
-
-		public Throwable getCause() {
-			return cause;
 		}
 
 		public ActorRef getHttp() {

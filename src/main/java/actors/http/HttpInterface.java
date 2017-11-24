@@ -17,12 +17,10 @@ import akka.http.javadsl.server.Route;
 import akka.stream.ActorMaterializer;
 import akka.stream.javadsl.Sink;
 import akka.stream.javadsl.Source;
+import utils.ConfigValues;
 
 public abstract class HttpInterface extends AllDirectives {
 
-	static final int MAX_TIMEOUT = 5 * 1000;
-	static final String HOST = "localhost";
-	
 	final ActorSystem system;
 	final LoggingAdapter log;
 	
@@ -39,7 +37,7 @@ public abstract class HttpInterface extends AllDirectives {
 		final ActorMaterializer materializer = ActorMaterializer.create(system);
 		
 		final Source<IncomingConnection, CompletionStage<ServerBinding>> serverSource = http
-				.bind(ConnectHttp.toHost(HOST, port), materializer);
+				.bind(ConnectHttp.toHost(ConfigValues.HOST, port), materializer);
 
 		final CompletionStage<ServerBinding> binding = serverSource.to(Sink.foreach(connection -> {
 			connection.handleWith(routes().flow(system, materializer), materializer);
@@ -64,7 +62,7 @@ public abstract class HttpInterface extends AllDirectives {
 	}
 	
 	private static boolean isAvailable(int port) {
-	    try (Socket ignored = new Socket(HOST, port)) {
+	    try (Socket ignored = new Socket(ConfigValues.HOST, port)) {
 	        return false;
 	    } catch (IOException ignored) {
 	        return true;

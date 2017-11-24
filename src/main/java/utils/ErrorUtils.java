@@ -31,6 +31,8 @@ public class ErrorUtils {
 			message = "Game doesn't exist.";
 		} else if (th instanceof GameIsFullException) {
 			message = "Game is already full.";
+		} else if (th instanceof NumberFormatException) {
+			message = "A number was expected as a parameter.";
 		} else {
 			message = "Something went wrong.";
 			code = StatusCodes.INTERNAL_SERVER_ERROR;

@@ -2,6 +2,7 @@ package actors.http;
 
 import static akka.pattern.PatternsCS.ask;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -12,6 +13,10 @@ import actors.GamesManager;
 import actors.GamesManager.CreateGame;
 import actors.GamesManager.CreateGameFailed;
 import actors.GamesManager.CreateGameSucceeded;
+import actors.SystemMonitor;
+import actors.SystemMonitor.GetSystemInfos;
+import actors.SystemMonitor.GetSystemInfosFailed;
+import actors.SystemMonitor.GetSystemInfosSucceeded;
 import actors.UserManager.GetUser;
 import actors.UserManager.GetUserFailed;
 import actors.UserManager.GetUserSucceeded;
@@ -33,25 +38,31 @@ import model.GameApiProtos.CreateGameResponse;
 import model.GameApiProtos.GetGameResponse;
 import model.GameNotFoundException;
 import model.GameProtos.Game;
+import model.SystemApiProtos.GetSystemInfosResponse;
+import model.SystemInfoProtos.SystemInfo;
 import model.UserApiProtos.CreateUserResponse;
 import model.UserApiProtos.GetUserResponse;
 import model.UserProtos.User;
 import scala.concurrent.Await;
 import scala.concurrent.Future;
+import utils.ConfigValues;
 import utils.ConversionUtils;
 import utils.ErrorUtils;
 import utils.UserManagerStore;
 
-public class HttpMain extends HttpInterface {
+public class HttpMain extends HttpInterface implements ConfigValues {
 
 	private final ActorRef gamesManager;
 	private final ActorRef usersManager;
+	private final ActorRef systemMonitor;
 	private final UserManagerStore userManagerStore;
 	
 	public HttpMain(ActorSystem system) {
 		super(system);
-		this.usersManager = system.actorOf(UsersManager.props(system), "UsersManager");
+		this.usersManager = system.actorOf(UsersManager.props(), "UsersManager");
 		this.gamesManager = system.actorOf(GamesManager.props(), "GamesManager");
+		this.systemMonitor = system.actorOf(SystemMonitor.props(), "SytemMonitor");
+
 		this.userManagerStore = new UserManagerStore(usersManager);
 	}
 
@@ -60,7 +71,8 @@ public class HttpMain extends HttpInterface {
 				createUserRoute(), 
 				getUserRoute(),
 				createGameRoute(),
-				getGameRoute()));
+				getGameRoute(), 
+				getSystemInfoRoute()));
 	}
 	
 	public Route createUserRoute() {
@@ -154,6 +166,26 @@ public class HttpMain extends HttpInterface {
 				Game game = ((GetGameSucceeded) message).getGame();
 				GetGameResponse resp = GetGameResponse.newBuilder()
 						.setGame(game)
+						.build();
+				return complete(StatusCodes.OK, ConversionUtils.toString(resp));
+			} catch (Throwable th) {
+				return ErrorUtils.errorRoute(this, th);
+			}
+		}));
+	}
+	
+	public Route getSystemInfoRoute() {
+		return path(PathMatchers.segment("system").slash("get"),
+				() -> parameter("amount", amount -> {
+			try {
+				Object message = ask(systemMonitor, new GetSystemInfos(Integer.parseInt(amount)), MAX_TIMEOUT)
+					.toCompletableFuture().get();
+				if (message instanceof GetSystemInfosFailed) {
+					throw ((GetSystemInfosFailed) message).getCause();
+				}
+				List<SystemInfo> systemInfos = ((GetSystemInfosSucceeded) message).getSystemInfos();
+				GetSystemInfosResponse resp = GetSystemInfosResponse.newBuilder()
+						.addAllSystemInfos(systemInfos)
 						.build();
 				return complete(StatusCodes.OK, ConversionUtils.toString(resp));
 			} catch (Throwable th) {

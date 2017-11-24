@@ -17,15 +17,15 @@ import utils.DbUtils;
 
 public class UsersManager extends AbstractActor {
 
-	static public Props props(ActorSystem system) {
-		return Props.create(UsersManager.class, () -> new UsersManager(system));
+	static public Props props() {
+		return Props.create(UsersManager.class, () -> new UsersManager());
 	}
 	
 	private final HashMap<String, ActorRef> userManagersMap = new HashMap<> ();
 	private final ActorSystem system;
 	
-	public UsersManager(ActorSystem system) {
-		this.system = system;
+	public UsersManager() {
+		this.system = getContext().getSystem();
 	}
 
 	@Override
@@ -84,16 +84,10 @@ public class UsersManager extends AbstractActor {
 		}
 	}
 
-	static public class CreateUserFailed {
-
-		private final Throwable cause;
+	static public class CreateUserFailed extends MessageFailed {
 
 		public CreateUserFailed(Throwable cause) {
-			this.cause = cause;
-		}
-
-		public Throwable getCause() {
-			return cause;
+			super(cause);
 		}
 	}
 
@@ -120,16 +114,10 @@ public class UsersManager extends AbstractActor {
 		}
 	}
 
-	static public class GetUserManagerFailed {
-
-		private final Throwable cause;
+	static public class GetUserManagerFailed extends MessageFailed {
 
 		public GetUserManagerFailed(Throwable cause) {
-			this.cause = cause;
-		}
-
-		public Throwable getCause() {
-			return cause;
+			super(cause);
 		}
 	}
 
